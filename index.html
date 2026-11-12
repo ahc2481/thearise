@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE ARISE | Apparel Production</title>
+    <!-- Brand Favicon / Tab Title Image -->
+    <link rel="icon" id="dynamicFavicon" type="image/jpeg" href="25835.jpg">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter, Orbitron & Playfair Display for High-Contrast Logo Serif -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0d10',
+                        cardBg: '#121620',
+                        cardBorder: '#1e2638',
+                        neonBlue: '#00f3ff',
+                        neonBlueDark: '#00a8b2',
+                        brandRed: '#ff003c',
+                        brandRedHover: '#d90032',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Orbitron', 'sans-serif'],
+                        logoSerif: ['Playfair Display', 'serif'],
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 15px rgba(0, 243, 255, 0.4), 0 0 30px rgba(0, 243, 255, 0.2)',
+                        'neon-red': '0 0 15px rgba(255, 0, 60, 0.5), 0 0 30px rgba(255, 0, 60, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b0d10;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Glowing Effects & Custom Utilities */
+        .glow-text-blue {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.4);
+        }
+        .glow-text-red {
+            text-shadow: 0 0 10px rgba(255, 0, 60, 0.7), 0 0 20px rgba(255, 0, 60, 0.4);
+        }
+        .border-neon-blue {
+            border-color: #00f3ff;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+        .border-neon-red {
+            border-color: #ff003c;
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.3);
+        }
+
+        /* 3D Page Flip Transitions */
+        .page-container {
+            perspective: 1500px;
+            position: relative;
+            min-height: 80vh;
+        }
+        .page-view {
+            display: none;
+            width: 100%;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1), opacity 0.5s ease;
+            opacity: 0;
+            transform: rotateY(-15deg) scale(0.97) translateY(20px);
+        }
+        .page-view.active {
+            display: block;
+            opacity: 1;
+            transform: rotateY(0deg) scale(1) translateY(0);
+        }
+        .page-view.flipping-out {
+            opacity: 0;
+            transform: rotateY(30deg) scale(0.95) translateY(-20px);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0d10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e2638;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f3ff;
+        }
+
+        /* Canvas Shirt Background Overlay Pattern */
+        .shirt-canvas-container {
+            background: radial-gradient(circle, #1a2233 0%, #0b0d10 100%);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Custom Toast Notification Box (Replaces alert) -->
+    <div id="toastNotification" class="fixed top-24 right-6 z-[100] hidden max-w-sm bg-cardBg border border-neonBlue text-white px-5 py-3.5 rounded-2xl shadow-neon-blue flex items-center gap-3 transition-all duration-300">
+        <i class="fa-solid fa-circle-info text-neonBlue text-lg"></i>
+        <span id="toastMessage" class="text-xs font-medium"></span>
+    </div>
+
+    <!-- TOP HEADER / NAV BAR -->
+    <header class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur-md border-b border-cardBorder">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Text & Uploaded Logo Graphic -->
+                <div class="flex items-center gap-3">
+                    <div class="relative group cursor-pointer" onclick="switchTab('home')">
+                        <div class="w-12 h-12 rounded-xl bg-black border border-neonBlue/60 p-0.5 shadow-neon-blue overflow-hidden flex items-center justify-center">
+                            <img id="headerLogoImg" src="25835.jpg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0b0d10/00f3ff?text=ARISE';" alt="THE ARISE Logo" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                    </div>
+                    <div class="cursor-pointer" onclick="switchTab('home')">
+                        <span class="font-logoSerif font-black text-2xl tracking-wider text-white block leading-none">THE ARISE</span>
+                        <span class="block text-[10px] tracking-[0.28em] text-gray-300 font-sans font-light mt-1">Apparel Production</span>
+                    </div>
+                    <!-- PNG Logo Upload Button -->
+                    <label for="logoUploadInput" title="Upload Custom PNG Logo" class="ml-1 cursor-pointer px-2.5 py-1.5 rounded-lg bg-cardBg border border-cardBorder hover:border-neonBlue text-[10px] text-gray-400 hover:text-neonBlue transition-all flex items-center gap-1">
+                        <i class="fa-solid fa-upload"></i>
+                        <span class="hidden sm:inline">PNG Logo</span>
+                    </label>
+                    <input type="file" id="logoUploadInput" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleLogoUpload(event)">
+                </div>
+
+                <!-- Main Desktop Navigation -->
+                <nav class="hidden lg:flex items-center space-x-1">
+                    <button onclick="switchTab('home')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-neonBlue bg-neonBlue/10 border border-neonBlue/30" data-tab="home">Home</button>
+                    <button onclick="switchTab('studio')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-300 hover:text-white hover:bg-cardBg" data-tab="studio">Design Studio</button>
+                    <button onclick="switchTab('materials')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-300 hover:text-white hover:bg-cardBg" data-tab="materials">Material Guide</button>
+                    <button onclick="switchTab('booking')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-300 hover:text-white hover:bg-cardBg" data-tab="booking">Bulk Booking</button>
+                    <button onclick="switchTab('reviews')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-300 hover:text-white hover:bg-cardBg" data-tab="reviews">Reviews</button>
+                    <button onclick="switchTab('about')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-300 hover:text-white hover:bg-cardBg" data-tab="about">About Us</button>
+                </nav>
+
+                <!-- Header Actions: Login CTA & Mobile Menu Toggle -->
+                <div class="flex items-center gap-3">
+                    <button onclick="switchTab('login')" class="relative group px-5 py-2.5 rounded-lg font-semibold text-sm overflow-hidden bg-brandRed text-white shadow-neon-red hover:bg-brandRedHover transition-all duration-300">
+                        <span class="relative z-10 flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear"></i> Portal / Login
+                        </span>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="lg:hidden text-gray-300 hover:text-neonBlue text-2xl p-2 focus:outline-none">
+                        <i class="fa-solid fa-bars" id="mobileMenuIcon"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-cardBg border-b border-cardBorder px-4 pt-2 pb-6 space-y-2">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-md text-base font-medium text-white hover:bg-darkBg">Home</button>
+            <button onclick="switchTab('studio'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-md text-base font-medium text-white hover:bg-darkBg">Design Studio</button>
+            <button onclick="switchTab('materials'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-md text-base font-medium text-white hover:bg-darkBg">Material Guide</button>
+            <button onclick="switchTab('booking'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-md text-base font-medium text-white hover:bg-darkBg">Bulk Booking</button>
+            <button onclick="switchTab('reviews'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-md text-base font-medium text-white hover:bg-darkBg">Reviews</button>
+            <button onclick="switchTab('about'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-md text-base font-medium text-white hover:bg-darkBg">About Us</button>
+            <button onclick="switchTab('login'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-md text-base font-medium text-brandRed hover:bg-darkBg">Login / Portal</button>
+        </div>
+
+        
+                
+
+    </header>
+
+    <!-- MAIN PAGE CONTAINER (SPA 3D FLIP CONTAINER) -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 page-container">
+        
+        <!-- PAGE 1: HOME PAGE -->
+        <section id="page-home" class="page-view active">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-cardBg via-darkBg to-cardBg border border-cardBorder p-8 sm:p-12 lg:p-16 shadow-2xl mb-12">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#00f3ff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-8">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brandRed/20 border border-brandRed text-brandRed text-xs font-mono font-bold mb-6">
+                            <i class="fa-solid fa-fire animate-pulse"></i> NEXT-GEN APPAREL MANUFACTURING
+                        </div>
+                        <h1 class="text-4xl sm:text-6xl font-heading font-extrabold text-white leading-tight mb-6">
+                            PRECISION <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-pink-500 to-neonBlue glow-text-red">CUSTOM</span> SHIRT PRODUCTION.
+                        </h1>
+                        <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                            From high-density street-style T-shirts to tailored formal denim & linen button-downs. Experience full real-time customization, instant bulk pricing, and sustainable manufacturing at <strong class="text-white">THE ARISE</strong>.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="switchTab('studio')" class="px-8 py-4 rounded-xl bg-brandRed text-white font-bold shadow-neon-red hover:bg-brandRedHover transform hover:-translate-y-1 transition-all duration-300">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Launch Design Studio
+                            </button>
+                            <button onclick="switchTab('booking')" class="px-8 py-4 rounded-xl bg-transparent border border-neonBlue text-neonBlue font-bold shadow-neon-blue hover:bg-neonBlue/10 transform hover:-translate-y-1 transition-all duration-300">
+                                <i class="fa-solid fa-boxes-packing mr-2"></i> Request Bulk Order
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Brand Emblem Showcase Card -->
+                    <div class="lg:col-span-4 flex justify-center">
+                        <div class="w-56 h-56 sm:w-64 sm:h-64 rounded-3xl bg-black border-2 border-neonBlue/50 shadow-neon-blue overflow-hidden p-2 transform hover:scale-105 transition-transform duration-500">
+                            <img id="heroLogoImg" src="25835.jpg" onerror="this.onerror=null; this.src='https://placehold.co/300x300/0b0d10/00f3ff?text=THE+ARISE';" alt="THE ARISE Apparel Production" class="w-full h-full object-cover rounded-2xl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Highlights Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-6 hover:border-neonBlue transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Individual Customizer</h3>
+                    <p class="text-gray-400 text-sm">Modify shirt color, graphics, chest badges, fabric patterns, and sizes for every single shirt with dynamic live preview.</p>
+                </div>
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-6 hover:border-brandRed transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-brandRed/10 text-brandRed flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Advanced Print Tech</h3>
+                    <p class="text-gray-400 text-sm">DTG (Direct-to-Garment), High-Density Screen Printing, Sublimation, and Precision Japanese Embroidery machinery.</p>
+                </div>
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-6 hover:border-neonBlue transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Fast Production Run</h3>
+                    <p class="text-gray-400 text-sm">Sample turnaround in 48 hours. Scalable batch production for fashion labels, corporate events, and merch brands.</p>
+                </div>
+            </div>
+
+            <!-- Featured Garment Samples Grid -->
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-2xl font-heading font-bold text-white">Popular Base Models</h2>
+                        <p class="text-gray-400 text-sm">Select a base garment to open in the interactive studio</p>
+                    </div>
+                    <button onclick="switchTab('studio')" class="text-neonBlue hover:text-white text-sm font-semibold flex items-center gap-1">
+                        View Studio <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Shirt 1 -->
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl overflow-hidden hover:border-neonBlue transition-all duration-300 group">
+                        <div class="shirt-canvas-container p-6 text-center relative flex justify-center items-center">
+                            <i class="fa-solid fa-shirt text-8xl text-brandRed group-hover:scale-105 transition-transform duration-300"></i>
+                            <span class="absolute top-3 right-3 bg-neonBlue/20 text-neonBlue text-xs font-mono px-2.5 py-1 rounded-full border border-neonBlue/40">240 GSM</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white">Heavyweight Street Oversized Tee</h4>
+                            <p class="text-xs text-gray-400 mt-1">100% Combed Organic Cotton</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-neonBlue font-mono font-bold">$18.50 <span class="text-[10px] text-gray-400">/unit</span></span>
+                                <button onclick="customizePreset('tee', '#ff003c')" class="px-3 py-1.5 rounded-lg bg-neonBlue/10 text-neonBlue text-xs font-bold hover:bg-neonBlue hover:text-black transition-colors">Customize</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shirt 2 -->
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl overflow-hidden hover:border-neonBlue transition-all duration-300 group">
+                        <div class="shirt-canvas-container p-6 text-center relative flex justify-center items-center">
+                            <i class="fa-solid fa-shirt text-8xl text-indigo-500 group-hover:scale-105 transition-transform duration-300"></i>
+                            <span class="absolute top-3 right-3 bg-neonBlue/20 text-neonBlue text-xs font-mono px-2.5 py-1 rounded-full border border-neonBlue/40">Denim</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white">Classic Indigo Denim Button Shirt</h4>
+                            <p class="text-xs text-gray-400 mt-1">12 oz Raw Denim Weave</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-neonBlue font-mono font-bold">$34.00 <span class="text-[10px] text-gray-400">/unit</span></span>
+                                <button onclick="customizePreset('button', '#3730a3')" class="px-3 py-1.5 rounded-lg bg-neonBlue/10 text-neonBlue text-xs font-bold hover:bg-neonBlue hover:text-black transition-colors">Customize</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shirt 3 -->
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl overflow-hidden hover:border-neonBlue transition-all duration-300 group">
+                        <div class="shirt-canvas-container p-6 text-center relative flex justify-center items-center">
+                            <i class="fa-solid fa-shirt text-8xl text-emerald-400 group-hover:scale-105 transition-transform duration-300"></i>
+                            <span class="absolute top-3 right-3 bg-neonBlue/20 text-neonBlue text-xs font-mono px-2.5 py-1 rounded-full border border-neonBlue/40">Linen</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white">Breeze Linen Resort Collar Shirt</h4>
+                            <p class="text-xs text-gray-400 mt-1">100% Breathable Flax Linen</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-neonBlue font-mono font-bold">$29.00 <span class="text-[10px] text-gray-400">/unit</span></span>
+                                <button onclick="customizePreset('button', '#34d399')" class="px-3 py-1.5 rounded-lg bg-neonBlue/10 text-neonBlue text-xs font-bold hover:bg-neonBlue hover:text-black transition-colors">Customize</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shirt 4 -->
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl overflow-hidden hover:border-neonBlue transition-all duration-300 group">
+                        <div class="shirt-canvas-container p-6 text-center relative flex justify-center items-center">
+                            <i class="fa-solid fa-shirt text-8xl text-amber-400 group-hover:scale-105 transition-transform duration-300"></i>
+                            <span class="absolute top-3 right-3 bg-neonBlue/20 text-neonBlue text-xs font-mono px-2.5 py-1 rounded-full border border-neonBlue/40">Polo</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white">Pro-Fit Pique Cotton Polo</h4>
+                            <p class="text-xs text-gray-400 mt-1">Mercerized Pique Cotton Blend</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-neonBlue font-mono font-bold">$22.00 <span class="text-[10px] text-gray-400">/unit</span></span>
+                                <button onclick="customizePreset('polo', '#fbbf24')" class="px-3 py-1.5 rounded-lg bg-neonBlue/10 text-neonBlue text-xs font-bold hover:bg-neonBlue hover:text-black transition-colors">Customize</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: INTERACTIVE DESIGN STUDIO / CUSTOMIZER -->
+        <section id="page-studio" class="page-view">
+            <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg border border-cardBorder p-4 rounded-2xl">
+                <div>
+                    <h2 class="text-2xl font-heading font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-paintbrush text-neonBlue"></i> Real-Time Apparel Customizer
+                    </h2>
+                    <p class="text-xs text-gray-400">Design front & back artwork, change material finishes, patterns, and graphics dynamically.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="resetCustomizer()" class="px-3 py-1.5 rounded-lg bg-darkBg text-xs text-gray-300 border border-cardBorder hover:text-white">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+                    </button>
+                    <button onclick="switchTab('booking')" class="px-4 py-2 rounded-lg bg-brandRed text-white text-xs font-bold shadow-neon-red hover:bg-brandRedHover">
+                        <i class="fa-solid fa-cart-shopping mr-1"></i> Order This Customization
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- STUDIO CANVAS VIEW (Left / Center Column) -->
+                <div class="lg:col-span-7 bg-cardBg border border-cardBorder rounded-3xl p-6 flex flex-col items-center justify-between relative shadow-2xl overflow-hidden">
+                    
+                    <!-- Top View Controls -->
+                    <div class="w-full flex items-center justify-between z-10 mb-4">
+                        <div class="flex items-center gap-2 bg-darkBg border border-cardBorder p-1 rounded-xl">
+                            <button id="viewFrontBtn" onclick="toggleShirtView('front')" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-neonBlue text-black">Front View</button>
+                            <button id="viewBackBtn" onclick="toggleShirtView('back')" class="px-4 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white">Back View</button>
+                        </div>
+                        <span id="currentFabricBadge" class="text-xs font-mono uppercase bg-neonBlue/10 text-neonBlue px-3 py-1 rounded-full border border-neonBlue/30">
+                            Fabric: Combed Cotton
+                        </span>
+                    </div>
+
+                    <!-- Live Dynamic SVG Interactive Canvas -->
+                    <div class="relative w-full max-w-[420px] h-[440px] flex items-center justify-center my-4" id="shirtCanvasWrapper">
+                        
+                        <!-- Base SVG Shirt Silhouette -->
+                        <svg id="shirtSvg" class="w-full h-full filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)] transition-all duration-300" viewBox="0 0 500 500">
+                            <defs>
+                                <pattern id="patternStripes" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                                    <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.18)" stroke-width="6" />
+                                </pattern>
+                                <pattern id="patternGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+                                    <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(0,243,255,0.22)" stroke-width="1.5"/>
+                                </pattern>
+                            </defs>
+
+                            <!-- Shirt Body Base -->
+                            <path id="shirtBodyPath" fill="#1e293b" stroke="#00f3ff" stroke-width="2" d="M 160,80 Q 250,110 340,80 L 440,150 L 380,240 L 350,200 L 350,440 L 150,440 L 150,200 L 120,240 L 60,150 Z" />
+                            
+                            <!-- Pattern Overlay Layer -->
+                            <path id="shirtPatternPath" fill="none" d="M 160,80 Q 250,110 340,80 L 440,150 L 380,240 L 350,200 L 350,440 L 150,440 L 150,200 L 120,240 L 60,150 Z" />
+
+                            <!-- Collar / Neckline -->
+                            <path id="shirtCollarPath" fill="#0f172a" stroke="#00f3ff" stroke-width="1.5" d="M 160,80 Q 250,130 340,80 Q 250,100 160,80 Z" />
+
+                            <!-- Buttons (For Button Down / Polo Style) -->
+                            <g id="shirtButtonsGroup" class="hidden">
+                                <line x1="250" y1="105" x2="250" y2="440" stroke="#00f3ff" stroke-width="2" stroke-dasharray="4" />
+                                <circle cx="250" cy="140" r="4" fill="#ffffff" />
+                                <circle cx="250" cy="190" r="4" fill="#ffffff" />
+                                <circle cx="250" cy="240" r="4" fill="#ffffff" />
+                                <circle cx="250" cy="290" r="4" fill="#ffffff" />
+                                <circle cx="250" cy="340" r="4" fill="#ffffff" />
+                            </g>
+                        </svg>
+
+                        <!-- Dynamic Front Graphic Overlay -->
+                        <div id="graphicOverlay" class="absolute pointer-events-none flex flex-col items-center justify-center text-center p-2 transition-opacity duration-300" style="top: 35%; left: 32%; width: 36%; height: 35%;">
+                            <i id="graphicIcon" class="fa-solid fa-dragon text-5xl text-brandRed transition-all duration-300 transform scale-100"></i>
+                            <span id="customTextDisplay" class="font-logoSerif font-black text-xs text-white uppercase mt-2 tracking-widest break-words max-w-full">THE ARISE</span>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Foot Info -->
+                    <div class="w-full flex items-center justify-between border-t border-cardBorder/60 pt-4 text-xs">
+                        <span class="text-gray-400">Estimated Unit Cost:</span>
+                        <span id="livePriceTag" class="text-xl font-mono font-black text-neonBlue glow-text-blue">$18.00</span>
+                    </div>
+
+                </div>
+
+                <!-- CONTROL PANEL (Right Column) -->
+                <div class="lg:col-span-5 space-y-5">
+                    
+                    <!-- Garment Type, Pattern & Color Controls -->
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 space-y-4">
+                        <h3 class="text-sm font-heading font-bold text-white uppercase tracking-wider text-neonBlue flex items-center gap-2">
+                            <i class="fa-solid fa-sliders"></i> 1. Apparel Base, Pattern & Color
+                        </h3>
+
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-2">Style Type</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setGarmentType('tee')" class="py-2 px-3 rounded-xl bg-darkBg border border-cardBorder text-xs text-white hover:border-neonBlue font-semibold">T-Shirt</button>
+                                <button onclick="setGarmentType('polo')" class="py-2 px-3 rounded-xl bg-darkBg border border-cardBorder text-xs text-white hover:border-neonBlue font-semibold">Polo Shirt</button>
+                                <button onclick="setGarmentType('button')" class="py-2 px-3 rounded-xl bg-darkBg border border-cardBorder text-xs text-white hover:border-neonBlue font-semibold">Button Shirt</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-2">Fabric Pattern</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setShirtPattern('none')" class="py-1.5 px-3 rounded-xl bg-darkBg border border-cardBorder text-xs text-gray-300 hover:border-neonBlue">Solid</button>
+                                <button onclick="setShirtPattern('stripes')" class="py-1.5 px-3 rounded-xl bg-darkBg border border-cardBorder text-xs text-gray-300 hover:border-neonBlue">Diagonal Stripe</button>
+                                <button onclick="setShirtPattern('grid')" class="py-1.5 px-3 rounded-xl bg-darkBg border border-cardBorder text-xs text-gray-300 hover:border-neonBlue">Cyber Grid</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-2">Garment Color</label>
+                            <div class="flex items-center space-x-3">
+                                <button onclick="setShirtColor('#1e293b')" class="w-8 h-8 rounded-full bg-slate-800 border-2 border-white focus:ring-2 focus:ring-neonBlue"></button>
+                                <button onclick="setShirtColor('#ff003c')" class="w-8 h-8 rounded-full bg-brandRed border-2 border-transparent focus:ring-2 focus:ring-neonBlue"></button>
+                                <button onclick="setShirtColor('#00f3ff')" class="w-8 h-8 rounded-full bg-neonBlue border-2 border-transparent focus:ring-2 focus:ring-neonBlue"></button>
+                                <button onclick="setShirtColor('#ffffff')" class="w-8 h-8 rounded-full bg-white border-2 border-transparent focus:ring-2 focus:ring-neonBlue"></button>
+                                <button onclick="setShirtColor('#0f172a')" class="w-8 h-8 rounded-full bg-slate-900 border-2 border-transparent focus:ring-2 focus:ring-neonBlue"></button>
+                                <button onclick="setShirtColor('#eab308')" class="w-8 h-8 rounded-full bg-yellow-500 border-2 border-transparent focus:ring-2 focus:ring-neonBlue"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Graphics & Artwork Overlay Controls -->
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 space-y-4">
+                        <h3 class="text-sm font-heading font-bold text-white uppercase tracking-wider text-brandRed flex items-center gap-2">
+                            <i class="fa-solid fa-icons"></i> 2. Graphic Overlay & Artwork
+                        </h3>
+
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-2">Preset Chest Emblem</label>
+                            <div class="grid grid-cols-5 gap-2 text-xl">
+                                <button onclick="setEmblemIcon('fa-dragon')" class="p-3 rounded-xl bg-darkBg border border-cardBorder hover:border-brandRed text-brandRed"><i class="fa-solid fa-dragon"></i></button>
+                                <button onclick="setEmblemIcon('fa-skull')" class="p-3 rounded-xl bg-darkBg border border-cardBorder hover:border-brandRed text-brandRed"><i class="fa-solid fa-skull"></i></button>
+                                <button onclick="setEmblemIcon('fa-bolt')" class="p-3 rounded-xl bg-darkBg border border-cardBorder hover:border-brandRed text-brandRed"><i class="fa-solid fa-bolt"></i></button>
+                                <button onclick="setEmblemIcon('fa-fire')" class="p-3 rounded-xl bg-darkBg border border-cardBorder hover:border-brandRed text-brandRed"><i class="fa-solid fa-fire"></i></button>
+                                <button onclick="setEmblemIcon('fa-crown')" class="p-3 rounded-xl bg-darkBg border border-cardBorder hover:border-brandRed text-brandRed"><i class="fa-solid fa-crown"></i></button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-2">Custom Text Print</label>
+                            <input type="text" id="customTextInput" oninput="updateCustomText(this.value)" value="THE ARISE" placeholder="Type text here..." class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-neonBlue">
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-2">Graphic Color</label>
+                            <div class="flex items-center space-x-3">
+                                <button onclick="setGraphicColor('#ff003c')" class="w-6 h-6 rounded-full bg-brandRed border border-white"></button>
+                                <button onclick="setGraphicColor('#00f3ff')" class="w-6 h-6 rounded-full bg-neonBlue border border-white"></button>
+                                <button onclick="setGraphicColor('#ffffff')" class="w-6 h-6 rounded-full bg-white border border-white"></button>
+                                <button onclick="setGraphicColor('#f59e0b')" class="w-6 h-6 rounded-full bg-amber-500 border border-white"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Print Technique & Size -->
+                    <div class="bg-cardBg border border-cardBorder rounded-2xl p-5 space-y-4">
+                        <h3 class="text-sm font-heading font-bold text-white uppercase tracking-wider text-neonBlue flex items-center gap-2">
+                            <i class="fa-solid fa-scissors"></i> 3. Technique & Sizing
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">Printing Method</label>
+                                <select id="techSelect" onchange="recalculatePrice()" class="w-full bg-darkBg border border-cardBorder rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-neonBlue">
+                                    <option value="dtg">Direct to Garment (DTG)</option>
+                                    <option value="screen">High-Density Screen Print</option>
+                                    <option value="embroidery">Custom Embroidery Badge</option>
+                                    <option value="sublimation">Full Sublimation Print</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">Target Size</label>
+                                <select class="w-full bg-darkBg border border-cardBorder rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-neonBlue">
+                                    <option>XS - Extra Small</option>
+                                    <option>S - Small</option>
+                                    <option selected>M - Medium</option>
+                                    <option>L - Large</option>
+                                    <option>XL - Extra Large</option>
+                                    <option>XXL - Street Oversized</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: MATERIAL GUIDE PAGE -->
+        <section id="page-materials" class="page-view">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mb-4">Mastery of <span class="text-neonBlue glow-text-blue">Dress Materials</span></h2>
+                <p class="text-gray-400 text-sm">Every material at THE ARISE undergoes rigorous GSM weight, breathability, color-retention, and tensile testing before entering production.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="materialsGrid">
+                <!-- Denim / Jeans -->
+                <div class="bg-cardBg border border-neonBlue/40 rounded-2xl p-6 shadow-neon-blue transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl shadow-neon-blue">
+                            <i class="fa-solid fa-shirt text-neonBlue"></i>
+                        </div>
+                        <span class="text-xs font-mono text-neonBlue bg-neonBlue/10 px-2.5 py-1 rounded-full border border-neonBlue/30">12-14 oz Twill</span>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Jeans / Raw & Washed Denim</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed mb-4">High-grade twill weave cotton denim engineered for structured button-down shirts, overshirts, and rugged streetwear collections.</p>
+                    <div class="space-y-2 text-xs border-t border-cardBorder pt-4">
+                        <div class="flex justify-between text-gray-400"><span>Durability Rating:</span> <strong class="text-neonBlue">9.8 / 10</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Best Technique:</span> <strong class="text-white">Embroidery / Laser Etch</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Feel:</span> <strong class="text-white">Structured, Crisp, Heavy</strong></div>
+                    </div>
+                </div>
+
+                <!-- Cotton -->
+                <div class="bg-cardBg border border-neonBlue/40 rounded-2xl p-6 shadow-neon-blue transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl shadow-neon-blue">
+                            <i class="fa-solid fa-leaf text-neonBlue"></i>
+                        </div>
+                        <span class="text-xs font-mono text-neonBlue bg-neonBlue/10 px-2.5 py-1 rounded-full border border-neonBlue/30">180 - 280 GSM</span>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Combed Organic Cotton</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed mb-4">Long-staple combed cotton offering supreme softness, zero pilling, and an ultra-smooth surface for high-resolution DTG prints.</p>
+                    <div class="space-y-2 text-xs border-t border-cardBorder pt-4">
+                        <div class="flex justify-between text-gray-400"><span>Durability Rating:</span> <strong class="text-neonBlue">9.0 / 10</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Best Technique:</span> <strong class="text-white">DTG & Screen Printing</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Feel:</span> <strong class="text-white">Ultra Soft, Breathable</strong></div>
+                    </div>
+                </div>
+
+                <!-- Linen -->
+                <div class="bg-cardBg border border-neonBlue/40 rounded-2xl p-6 shadow-neon-blue transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl shadow-neon-blue">
+                            <i class="fa-solid fa-wind text-neonBlue"></i>
+                        </div>
+                        <span class="text-xs font-mono text-neonBlue bg-neonBlue/10 px-2.5 py-1 rounded-full border border-neonBlue/30">Lightweight</span>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Organic Flax Linen</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed mb-4">Organically grown flax fibers creating breathable, thermoregulating shirts ideal for summer & resort wear.</p>
+                    <div class="space-y-2 text-xs border-t border-cardBorder pt-4">
+                        <div class="flex justify-between text-gray-400"><span>Durability Rating:</span> <strong class="text-neonBlue">8.5 / 10</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Best Technique:</span> <strong class="text-white">Minimalist Embroidery</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Feel:</span> <strong class="text-white">Cool, Airy, Textured</strong></div>
+                    </div>
+                </div>
+
+                <!-- Silk -->
+                <div class="bg-cardBg border border-neonBlue/40 rounded-2xl p-6 shadow-neon-blue transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl shadow-neon-blue">
+                            <i class="fa-solid fa-gem text-neonBlue"></i>
+                        </div>
+                        <span class="text-xs font-mono text-neonBlue bg-neonBlue/10 px-2.5 py-1 rounded-full border border-neonBlue/30">Luxury</span>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Mulberry Silk & Satin</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed mb-4">High-sheen, ultra-smooth luxurious fabric engineered for high-end designer shirts and statement evening apparel.</p>
+                    <div class="space-y-2 text-xs border-t border-cardBorder pt-4">
+                        <div class="flex justify-between text-gray-400"><span>Durability Rating:</span> <strong class="text-neonBlue">8.0 / 10</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Best Technique:</span> <strong class="text-white">Precision Screen Printing</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Feel:</span> <strong class="text-white">Silky Smooth, Sheen</strong></div>
+                    </div>
+                </div>
+
+                <!-- French Terry Fleece -->
+                <div class="bg-cardBg border border-neonBlue/40 rounded-2xl p-6 shadow-neon-blue transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl shadow-neon-blue">
+                            <i class="fa-solid fa-cloud text-neonBlue"></i>
+                        </div>
+                        <span class="text-xs font-mono text-neonBlue bg-neonBlue/10 px-2.5 py-1 rounded-full border border-neonBlue/30">400 GSM</span>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">French Terry Fleece</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed mb-4">Thick, plush interior loop fleece designed for luxury hoodies, heavy boxy t-shirts, and winter streetwear.</p>
+                    <div class="space-y-2 text-xs border-t border-cardBorder pt-4">
+                        <div class="flex justify-between text-gray-400"><span>Durability Rating:</span> <strong class="text-neonBlue">9.7 / 10</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Best Technique:</span> <strong class="text-white">Puff Print / Embroidery</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Feel:</span> <strong class="text-white">Cozy, Warm, Heavy</strong></div>
+                    </div>
+                </div>
+
+                <!-- Performance Poly-Mesh -->
+                <div class="bg-cardBg border border-neonBlue/40 rounded-2xl p-6 shadow-neon-blue transition-all duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-neonBlue/10 text-neonBlue flex items-center justify-center text-2xl shadow-neon-blue">
+                            <i class="fa-solid fa-bolt text-neonBlue"></i>
+                        </div>
+                        <span class="text-xs font-mono text-neonBlue bg-neonBlue/10 px-2.5 py-1 rounded-full border border-neonBlue/30">Performance</span>
+                    </div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-2">Performance Poly-Mesh</h3>
+                    <p class="text-gray-300 text-xs leading-relaxed mb-4">Wrinkle-resistant activewear blend engineered for athletic jerseys, corporate polos, and vibrant all-over sublimation.</p>
+                    <div class="space-y-2 text-xs border-t border-cardBorder pt-4">
+                        <div class="flex justify-between text-gray-400"><span>Durability Rating:</span> <strong class="text-neonBlue">9.5 / 10</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Best Technique:</span> <strong class="text-white">Dye Sublimation</strong></div>
+                        <div class="flex justify-between text-gray-400"><span>Feel:</span> <strong class="text-white">Flexible, Quick-Dry</strong></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: BULK BOOKING & PRODUCTION CONSULTATION -->
+        <section id="page-booking" class="page-view">
+            <div class="max-w-4xl mx-auto bg-cardBg border border-cardBorder rounded-3xl p-6 sm:p-10 shadow-2xl">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-heading font-bold text-white mb-2">Schedule Production Order</h2>
+                    <p class="text-gray-400 text-sm">Fill out the batch specification parameters for instant production scheduling and cost estimation.</p>
+                </div>
+
+                <form id="bookingForm" onsubmit="submitBooking(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Full Name</label>
+                            <input type="text" required placeholder="ANALA HARSHA" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neonBlue">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Business Email</label>
+                            <input type="email" required placeholder="alex@brand.com" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neonBlue">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Garment Type</label>
+                            <select id="bookingGarment" onchange="calculateBookingTotal()" class="w-full bg-darkBg border border-cardBorder rounded-xl px-3 py-3 text-xs text-white focus:outline-none focus:border-neonBlue">
+                                <option value="18">Oversized T-Shirt ($18/u)</option>
+                                <option value="34">Denim / Jeans Shirt ($34/u)</option>
+                                <option value="29">Linen Button-Down ($29/u)</option>
+                                <option value="22">Performance Polo ($22/u)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Print Technique</label>
+                            <select id="bookingTech" onchange="calculateBookingTotal()" class="w-full bg-darkBg border border-cardBorder rounded-xl px-3 py-3 text-xs text-white focus:outline-none focus:border-neonBlue">
+                                <option value="0">DTG Print (Included)</option>
+                                <option value="2">Screen Print (+$2/u)</option>
+                                <option value="5.5">Embroidery (+$5.50/u)</option>
+                                <option value="4">Sublimation (+$4/u)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Quantity (Units)</label>
+                            <input type="number" id="bookingQty" min="10" value="50" oninput="calculateBookingTotal()" required class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neonBlue">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Target Delivery</label>
+                            <input type="date" required class="w-full bg-darkBg border border-cardBorder rounded-xl px-3 py-3 text-xs text-white focus:outline-none focus:border-neonBlue">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-2">Special Printing Instructions / Tech Specs</label>
+                        <textarea rows="4" placeholder="Detail front/back design placements, neck tag customization, or embroidery thread colors..." class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neonBlue"></textarea>
+                    </div>
+
+                    <!-- Instant Estimate Callout -->
+                    <div class="bg-darkBg border border-neonBlue/40 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">Calculated Estimated Total:</span>
+                            <span id="bookingTotalDisplay" class="text-3xl font-heading font-black text-neonBlue glow-text-blue">$810.00</span>
+                            <span class="text-[10px] text-emerald-400 block mt-0.5"><i class="fa-solid fa-circle-check"></i> Includes Bulk Tier Discount</span>
+                        </div>
+                        <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brandRed text-white font-bold shadow-neon-red hover:bg-brandRedHover transition-all">
+                            Confirm Production Booking
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- PAGE 5: REVIEWS & TESTIMONIALS -->
+        <section id="page-reviews" class="page-view">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-heading font-bold text-white">Client Feedback & Ratings</h2>
+                    <p class="text-gray-400 text-sm">Real reviews from clothing labels, corporate clients, and fashion creators.</p>
+                </div>
+                <button onclick="toggleReviewForm()" class="px-5 py-2.5 rounded-xl bg-neonBlue/10 border border-neonBlue text-neonBlue font-semibold text-sm hover:bg-neonBlue hover:text-black transition-all">
+                    <i class="fa-solid fa-pen-to-square mr-1"></i> Write a Review
+                </button>
+            </div>
+
+            <!-- Inline Interactive Review Submission Drawer -->
+            <div id="reviewFormDrawer" class="hidden bg-cardBg border border-neonBlue/50 rounded-2xl p-6 mb-8 shadow-neon-blue">
+                <h3 class="text-sm font-heading font-bold text-white mb-4">Submit Verified Client Feedback</h3>
+                <form onsubmit="submitNewReview(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" id="revAuthor" required placeholder="Your Name & Brand" class="bg-darkBg border border-cardBorder rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-neonBlue">
+                    <input type="text" id="revText" required placeholder="Share your experience with our shirts & printing..." class="bg-darkBg border border-cardBorder rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-neonBlue">
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-brandRed text-white text-xs font-bold shadow-neon-red hover:bg-brandRedHover">Post Review</button>
+                </form>
+            </div>
+
+            <!-- Review Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="reviewsContainer">
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-6">
+                    <div class="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-300 text-xs italic mb-4">"The 240 GSM organic cotton tees produced for our streetwear drop sold out in 2 hours. Print clarity on DTG graphics was flawless."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-brandRed/20 text-brandRed flex items-center justify-center font-bold text-sm">MV</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">Marcus Vance</h4>
+                            <span class="text-[10px] text-gray-400">Founder, Vance Apparel</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-6">
+                    <div class="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-300 text-xs italic mb-4">"Ordered 300 custom linen button-down shirts for our corporate retreat. Premium stitch quality and extremely responsive customizer UI."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-neonBlue/20 text-neonBlue flex items-center justify-center font-bold text-sm">SL</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">Sarah Lin</h4>
+                            <span class="text-[10px] text-gray-400">Operations Director, Horizon Tech</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-6">
+                    <div class="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-300 text-xs italic mb-4">"Their embroidery work on heavy denim shirts is unmatched. Fast turnaround and exact pantone color matching."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">DR</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">David Ruiz</h4>
+                            <span class="text-[10px] text-gray-400">Lead Stylist, Urban Outfits</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 6: ABOUT US PAGE -->
+        <section id="page-about" class="page-view">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonBlue/10 border border-neonBlue text-neonBlue text-xs font-mono font-bold">
+                        ESTABLISHED 2024
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-heading font-extrabold text-white leading-tight">
+                        REDEFINING <span class="text-brandRed glow-text-red">APPAREL</span> MANUFACTURING.
+                    </h2>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        <strong>THE ARISE</strong> was founded with a singular vision: to eliminate the friction between creative fashion concepts and industrial apparel production.
+                    </p>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        We combine state-of-the-art Direct-to-Garment printing, high-density screen printing, and computerized embroidery with zero-waste organic fabric sourcing. Every individual shirt produced in our manufacturing hub is quality-checked for GSM density, colorfastness, and seam durability.
+                    </p>
+                    
+                    <div class="grid grid-cols-3 gap-4 border-t border-cardBorder pt-6 text-center">
+                        <div>
+                            <span class="text-2xl font-heading font-bold text-neonBlue">500K+</span>
+                            <span class="text-[10px] text-gray-400 block uppercase font-mono">Shirts Printed</span>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-heading font-bold text-brandRed">99.4%</span>
+                            <span class="text-[10px] text-gray-400 block uppercase font-mono">Satisfaction</span>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-heading font-bold text-neonBlue">48hr</span>
+                            <span class="text-[10px] text-gray-400 block uppercase font-mono">Sample Turnaround</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-cardBg border border-cardBorder rounded-3xl p-8 relative overflow-hidden shadow-2xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-neonBlue/10 rounded-full filter blur-2xl"></div>
+                    <h3 class="text-xl font-heading font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-brandRed"></i> Our Guarantee
+                    </h3>
+                    <ul class="space-y-4 text-xs text-gray-300">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-neonBlue mt-1"></i>
+                            <span><strong>Zero-Fading Guarantee:</strong> Reactive dye technology ensures colors stay vibrant over 100+ washes.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-neonBlue mt-1"></i>
+                            <span><strong>Sustainable Sourcing:</strong> 100% GOTS certified organic cotton and eco-conscious water-based inks.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-neonBlue mt-1"></i>
+                            <span><strong>Real-Time Digital Proofing:</strong> What you see on our customizer matches the physical output.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 7: SEPARATE LOGIN & CLIENT PORTAL PAGE -->
+        <section id="page-login" class="page-view">
+            <div class="max-w-md mx-auto bg-cardBg border border-cardBorder rounded-3xl p-8 shadow-2xl relative">
+                
+                <!-- Login Header -->
+                <div class="text-center mb-6">
+                    <div class="w-14 h-14 rounded-2xl bg-black border border-neonBlue/50 mx-auto flex items-center justify-center overflow-hidden p-1 mb-3 shadow-neon-blue">
+                        <img id="loginLogoImg" src="25835.jpg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0b0d10/00f3ff?text=ARISE';" alt="THE ARISE Portal" class="w-full h-full object-cover rounded-xl">
+                    </div>
+                    <h2 class="text-2xl font-heading font-bold text-white">Client Portal Login</h2>
+                    <p class="text-xs text-gray-400 mt-1">Access order tracking, vector files, and re-orders.</p>
+                </div>
+
+                <!-- Form Tabs -->
+                <div class="flex bg-darkBg p-1 rounded-xl mb-6 text-xs font-semibold">
+                    <button id="loginTabBtn" onclick="toggleAuthMode('login')" class="flex-1 py-2 rounded-lg bg-neonBlue text-black font-bold">Sign In</button>
+                    <button id="registerTabBtn" onclick="toggleAuthMode('register')" class="flex-1 py-2 rounded-lg text-gray-400 hover:text-white">Register Account</button>
+                </div>
+
+                <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                    <div id="nameFieldGroup" class="hidden">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Company / Brand Name</label>
+                        <input type="text" id="authName" placeholder="Aura Streetwear" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-neonBlue">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Email Address</label>
+                        <input type="email" required placeholder="client@domain.com" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-neonBlue">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Password</label>
+                        <input type="password" required placeholder="••••••••" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-neonBlue">
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="rounded bg-darkBg border-cardBorder text-brandRed focus:ring-0"> Remember me
+                        </label>
+                        <a href="#" onclick="showToast('Password recovery instructions sent to your email.'); return false;" class="text-neonBlue hover:underline">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" id="authSubmitBtn" class="w-full py-3 rounded-xl bg-brandRed text-white font-bold text-sm shadow-neon-red hover:bg-brandRedHover transition-all">
+                        Sign In to Client Portal
+                    </button>
+                </form>
+
+                <!-- Live Order Status Tracker Widget -->
+                <div class="mt-6 pt-6 border-t border-cardBorder">
+                    <span class="text-xs font-semibold text-gray-300 block mb-2">Live Production Order Tracker</span>
+                    <div class="flex gap-2">
+                        <input type="text" id="orderTrackId" placeholder="e.g. ARISE-8042" class="flex-grow bg-darkBg border border-cardBorder rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-neonBlue">
+                        <button type="button" onclick="trackOrderStatus()" class="px-4 py-2 rounded-xl bg-neonBlue/10 border border-neonBlue text-neonBlue text-xs font-bold hover:bg-neonBlue hover:text-black transition-all">Track</button>
+                    </div>
+                    <div id="orderTrackResult" class="hidden mt-3 p-3 rounded-xl bg-darkBg border border-neonBlue/40 text-xs text-gray-300"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FLOATING AI CHATBOT ASSISTANT ("Arise AI") -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <!-- Chat Trigger Button with Brand Logo -->
+        <button onclick="toggleChatbot()" class="w-14 h-14 rounded-full bg-gradient-to-r from-brandRed to-neonBlue p-0.5 shadow-neon-blue hover:scale-110 transition-transform duration-300">
+            <div class="w-full h-full bg-black rounded-full flex items-center justify-center relative overflow-hidden">
+                <img id="botTriggerLogoImg" src="25835.jpg" onerror="this.onerror=null; this.src='https://placehold.co/80x80/0b0d10/00f3ff?text=AI';" alt="Arise AI" class="w-full h-full object-cover rounded-full opacity-90">
+                <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-brandRed rounded-full border border-darkBg animate-ping"></span>
+            </div>
+        </button>
+
+        <!-- Chat Window Panel -->
+        <div id="chatWindow" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-cardBg border border-cardBorder rounded-3xl shadow-2xl overflow-hidden flex-col" style="height: 460px;">
+            <!-- Header -->
+            <div class="bg-darkBg p-4 border-b border-cardBorder flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-black border border-neonBlue/60 overflow-hidden p-0.5">
+                        <img id="botHeaderLogoImg" src="25835.jpg" onerror="this.onerror=null; this.src='https://placehold.co/80x80/0b0d10/00f3ff?text=AI';" alt="Arise AI" class="w-full h-full object-cover rounded-full">
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Arise AI Production Assistant</h4>
+                        <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Online
+                        </span>
+                    </div>
+                </div>
+                <button onclick="toggleChatbot()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Messages Box -->
+            <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs">
+                <div class="bg-darkBg p-3 rounded-2xl border border-cardBorder text-gray-300 max-w-[85%]">
+                    Hello! I'm <strong>Arise AI</strong>. Ask me about dress materials (Jeans/Denim, Cotton, Linen, Silk), print techniques, or bulk order discounts!
+                </div>
+            </div>
+
+            <!-- Input Box -->
+            <div class="p-3 bg-darkBg border-t border-cardBorder flex items-center gap-2">
+                <input type="text" id="chatInput" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Ask Arise AI..." class="flex-grow bg-cardBg border border-cardBorder rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-neonBlue">
+                <button onclick="sendChatMessage()" class="w-9 h-9 rounded-xl bg-neonBlue text-black flex items-center justify-center font-bold hover:bg-neonBlueDark">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN FOOTER SECTION -->
+    <footer class="bg-darkBg border-t border-cardBorder mt-16 pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+                
+                <!-- Brand Info Column -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-black border border-neonBlue/60 p-0.5 shadow-neon-blue overflow-hidden flex items-center justify-center">
+                            <img id="footerLogoImg" src="25835.jpg" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0b0d10/00f3ff?text=ARISE';" alt="THE ARISE Logo" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <div>
+                            <span class="font-logoSerif font-black text-xl text-white block leading-none">THE ARISE</span>
+                            <span class="block text-[10px] tracking-[0.25em] text-gray-400 font-sans mt-1">Apparel Production</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs leading-relaxed max-w-sm">
+                        Premier customized apparel manufacturing specializing in heavy cotton t-shirts, tailored denim shirts, linen resort wear, and high-density screen printing.
+                    </p>
+                    <div class="flex items-center space-x-3 text-lg text-gray-400">
+                        <a href="#" onclick="return false;" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" onclick="return false;" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" onclick="return false;" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="#" onclick="return false;" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Complete Sitemap / Quick Links -->
+                <div>
+                    <h4 class="text-xs font-heading font-bold uppercase tracking-wider text-neonBlue mb-4">Sitemap Nav</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><button onclick="switchTab('home')" class="hover:text-white transition-colors">Home Page</button></li>
+                        <li><button onclick="switchTab('studio')" class="hover:text-white transition-colors">Design Studio Customizer</button></li>
+                        <li><button onclick="switchTab('materials')" class="hover:text-white transition-colors">Material Guide & Specs</button></li>
+                        <li><button onclick="switchTab('booking')" class="hover:text-white transition-colors">Bulk Production Booking</button></li>
+                        <li><button onclick="switchTab('reviews')" class="hover:text-white transition-colors">Client Reviews</button></li>
+                        <li><button onclick="switchTab('about')" class="hover:text-white transition-colors">About Company</button></li>
+                        <li><button onclick="switchTab('login')" class="hover:text-white transition-colors">Client Login Portal</button></li>
+                    </ul>
+                </div>
+
+                <!-- Fabrics Quick Links -->
+                <div>
+                    <h4 class="text-xs font-heading font-bold uppercase tracking-wider text-brandRed mb-4">Materials Catalog</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#" onclick="switchTab('materials'); return false;" class="hover:text-white">Jeans / Denim Fabrics</a></li>
+                        <li><a href="#" onclick="switchTab('materials'); return false;" class="hover:text-white">Combed Organic Cotton</a></li>
+                        <li><a href="#" onclick="switchTab('materials'); return false;" class="hover:text-white">Organic Flax Linen</a></li>
+                        <li><a href="#" onclick="switchTab('materials'); return false;" class="hover:text-white">Mulberry Silk & Satin</a></li>
+                        <li><a href="#" onclick="switchTab('materials'); return false;" class="hover:text-white">French Terry Fleece</a></li>
+                        <li><a href="#" onclick="switchTab('materials'); return false;" class="hover:text-white">Performance Poly-Mesh</a></li>
+                    </ul>
+                </div>
+
+                <!-- Real-Time Clock & System Info Widget -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">
+                            <i class="fa-regular fa-clock text-neonBlue"></i> Current Live Time
+                        </span>
+                        <div id="liveClockDisplay" class="font-mono text-xl font-bold text-neonBlue glow-text-blue">
+                            00:00:00 AM
+                        </div>
+                        <div id="liveDateDisplay" class="text-xs text-gray-400 font-mono mt-1">
+                            Loading date...
+                        </div>
+                    </div>
+                    <div class="border-t border-cardBorder/60 pt-3 mt-3">
+                        <span class="text-[10px] text-emerald-400 flex items-center gap-1 font-mono">
+                            <span class="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></span> Production Status: ACTIVE
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER BOTTOM BADGE & EXPLICIT DESIGNER CREDITS -->
+            <div class="border-t border-cardBorder pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                
+                <!-- Copyright info -->
+                <p class="text-xs text-gray-500 text-center md:text-left">
+                    &copy; 2026 <strong>THE ARISE | Apparel Production</strong>. All rights reserved.
+                </p>
+
+                <!-- Designer Credit Badge (Explicitly Naming the 3 Designers) -->
+                <div class="inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-full bg-cardBg border border-neonBlue/40 text-xs shadow-neon-blue">
+                    <i class="fa-solid fa-code-compare text-brandRed"></i>
+                    <span class="text-gray-300">Designed & Built by </span>
+                    <strong class="text-neonBlue font-semibold">ANALA HARSHA</strong>, 
+                    <strong class="text-neonBlue font-semibold">KATTAMURI LOKESH</strong>, & 
+                    <strong class="text-neonBlue font-semibold">V.YUVA HARSHA</strong>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT INTERACTIVE ENGINE -->
+    <script>
+        /* State Variables */
+        let activeTab = 'home';
+        let currentGarment = 'tee';
+        let shirtColor = '#1e293b';
+        let graphicColor = '#ff003c';
+        let isFrontView = true;
+        let authMode = 'login';
+
+        /* Initialization */
+        window.onload = function() {
+            startClock();
+            calculateBookingTotal();
+            recalculatePrice();
+        };
+
+        /* Custom Non-Blocking Toast Notification */
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            const msgEl = document.getElementById('toastMessage');
+            if (toast && msgEl) {
+                msgEl.innerText = msg;
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 4000);
+            }
+        }
+
+        /* Handle Custom PNG Logo File Upload */
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                const logoIds = ['headerLogoImg', 'heroLogoImg', 'loginLogoImg', 'botTriggerLogoImg', 'botHeaderLogoImg', 'footerLogoImg'];
+                logoIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.src = dataUrl;
+                });
+                const favicon = document.getElementById('dynamicFavicon');
+                if (favicon) favicon.href = dataUrl;
+                showToast('Custom PNG logo applied across header, tab icon, and footer!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /* Real-Time Live Clock Engine */
+        function startClock() {
+            function update() {
+                const now = new Date();
+                const hours = String(now.getHours() % 12 || 12).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+                
+                const clockElem = document.getElementById('liveClockDisplay');
+                const dateElem = document.getElementById('liveDateDisplay');
+
+                if (clockElem) {
+                    clockElem.innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
+                }
+                if (dateElem) {
+                    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+                    dateElem.innerText = now.toLocaleDateString('en-US', options);
+                }
+            }
+            update();
+            setInterval(update, 1000);
+        }
+
+        /* Smooth 3D Page Flip Navigation Engine */
+        function switchTab(tabId) {
+            if (activeTab === tabId) return;
+
+            const currentView = document.getElementById(`page-${activeTab}`);
+            const targetView = document.getElementById(`page-${tabId}`);
+
+            if (currentView) {
+                currentView.classList.add('flipping-out');
+                setTimeout(() => {
+                    currentView.classList.remove('active', 'flipping-out');
+                    if (targetView) {
+                        targetView.classList.add('active');
+                    }
+                }, 300);
+            } else if (targetView) {
+                targetView.classList.add('active');
+            }
+
+            activeTab = tabId;
+
+            // Update Nav Pill Styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-neonBlue bg-neonBlue/10 border border-neonBlue/30";
+                } else {
+                    btn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-300 hover:text-white hover:bg-cardBg";
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* Mobile Menu Toggle */
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        /* Quick Select Material Ticker Handler */
+        function quickSelectMaterial(matId) {
+            switchTab('materials');
+        }
+
+        /* STUDIO CUSTOMIZER ENGINE */
+        function setShirtColor(hex) {
+            shirtColor = hex;
+            const shirtPath = document.getElementById('shirtBodyPath');
+            if (shirtPath) {
+                shirtPath.setAttribute('fill', hex);
+            }
+            recalculatePrice();
+        }
+
+        function setShirtPattern(patternType) {
+            const patternPath = document.getElementById('shirtPatternPath');
+            if (!patternPath) return;
+            if (patternType === 'stripes') {
+                patternPath.setAttribute('fill', 'url(#patternStripes)');
+            } else if (patternType === 'grid') {
+                patternPath.setAttribute('fill', 'url(#patternGrid)');
+            } else {
+                patternPath.setAttribute('fill', 'none');
+            }
+        }
+
+        function setGraphicColor(hex) {
+            graphicColor = hex;
+            const graphicIcon = document.getElementById('graphicIcon');
+            const customText = document.getElementById('customTextDisplay');
+            if (graphicIcon) graphicIcon.style.color = hex;
+            if (customText) customText.style.color = hex;
+        }
+
+        function setGarmentType(type) {
+            currentGarment = type;
+            const buttonsGroup = document.getElementById('shirtButtonsGroup');
+            const fabricBadge = document.getElementById('currentFabricBadge');
+
+            if (type === 'button') {
+                buttonsGroup.classList.remove('hidden');
+                fabricBadge.innerText = 'Fabric: 12 oz Raw Denim';
+            } else if (type === 'polo') {
+                buttonsGroup.classList.remove('hidden');
+                fabricBadge.innerText = 'Fabric: Mercerized Pique Cotton';
+            } else {
+                buttonsGroup.classList.add('hidden');
+                fabricBadge.innerText = 'Fabric: 240 GSM Combed Cotton';
+            }
+            recalculatePrice();
+        }
+
+        function setEmblemIcon(iconClass) {
+            const graphicIcon = document.getElementById('graphicIcon');
+            if (graphicIcon) {
+                graphicIcon.className = `fa-solid ${iconClass} text-5xl transition-all duration-300 transform scale-100`;
+                graphicIcon.style.color = graphicColor;
+            }
+        }
+
+        function updateCustomText(val) {
+            const customTextDisplay = document.getElementById('customTextDisplay');
+            if (customTextDisplay) {
+                customTextDisplay.innerText = val.trim() !== "" ? val : "";
+            }
+        }
+
+        function toggleShirtView(view) {
+            isFrontView = view === 'front';
+            const frontBtn = document.getElementById('viewFrontBtn');
+            const backBtn = document.getElementById('viewBackBtn');
+            const overlay = document.getElementById('graphicOverlay');
+
+            if (isFrontView) {
+                frontBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-neonBlue text-black";
+                backBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white";
+                overlay.style.opacity = "1";
+            } else {
+                backBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-neonBlue text-black";
+                frontBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white";
+                overlay.style.opacity = "0.2";
+            }
+        }
+
+        function customizePreset(type, color) {
+            switchTab('studio');
+            setGarmentType(type);
+            setShirtColor(color);
+        }
+
+        function resetCustomizer() {
+            setGarmentType('tee');
+            setShirtPattern('none');
+            setShirtColor('#1e293b');
+            setGraphicColor('#ff003c');
+            setEmblemIcon('fa-dragon');
+            updateCustomText('THE ARISE');
+            document.getElementById('customTextInput').value = "THE ARISE";
+        }
+
+        function recalculatePrice() {
+            let base = 18.00;
+            if (currentGarment === 'polo') base = 22.00;
+            if (currentGarment === 'button') base = 32.00;
+
+            const techSelect = document.getElementById('techSelect');
+            if (techSelect) {
+                if (techSelect.value === 'embroidery') base += 5.50;
+                if (techSelect.value === 'sublimation') base += 4.00;
+                if (techSelect.value === 'screen') base += 2.00;
+            }
+
+            const livePriceTag = document.getElementById('livePriceTag');
+            if (livePriceTag) {
+                livePriceTag.innerText = `$${base.toFixed(2)}`;
+            }
+        }
+
+        /* BULK BOOKING CALCULATION */
+        function calculateBookingTotal() {
+            const garmentSelect = document.getElementById('bookingGarment');
+            const techSelect = document.getElementById('bookingTech');
+            const qtyInput = document.getElementById('bookingQty');
+            const display = document.getElementById('bookingTotalDisplay');
+
+            if (garmentSelect && qtyInput && display) {
+                const unitPrice = parseFloat(garmentSelect.value) + (techSelect ? parseFloat(techSelect.value) : 0);
+                const qty = parseInt(qtyInput.value) || 1;
+                
+                let discount = 1.0;
+                if (qty >= 100) discount = 0.85;
+                else if (qty >= 50) discount = 0.90;
+
+                const total = (unitPrice * qty * discount).toFixed(2);
+                display.innerText = `$${total}`;
+            }
+        }
+
+        function submitBooking(e) {
+            e.preventDefault();
+            showToast('Bulk production booking submitted to THE ARISE engineering team!');
+        }
+
+        /* AUTH & PORTAL LOGIC */
+        function toggleAuthMode(mode) {
+            authMode = mode;
+            const loginBtn = document.getElementById('loginTabBtn');
+            const regBtn = document.getElementById('registerTabBtn');
+            const nameGroup = document.getElementById('nameFieldGroup');
+            const submitBtn = document.getElementById('authSubmitBtn');
+
+            if (mode === 'register') {
+                regBtn.className = "flex-1 py-2 rounded-lg bg-neonBlue text-black font-bold";
+                loginBtn.className = "flex-1 py-2 rounded-lg text-gray-400 hover:text-white";
+                nameGroup.classList.remove('hidden');
+                submitBtn.innerText = "Create Client Portal Account";
+            } else {
+                loginBtn.className = "flex-1 py-2 rounded-lg bg-neonBlue text-black font-bold";
+                regBtn.className = "flex-1 py-2 rounded-lg text-gray-400 hover:text-white";
+                nameGroup.classList.add('hidden');
+                submitBtn.innerText = "Sign In to Client Portal";
+            }
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            showToast(authMode === 'login' ? 'Signed in to THE ARISE Client Portal!' : 'Client account registered successfully!');
+        }
+
+        function trackOrderStatus() {
+            const idInput = document.getElementById('orderTrackId');
+            const resBox = document.getElementById('orderTrackResult');
+            const orderId = idInput ? idInput.value.trim() : '';
+            if (!orderId) {
+                showToast('Please enter an Order ID (e.g., ARISE-8042).');
+                return;
+            }
+            resBox.classList.remove('hidden');
+            resBox.innerHTML = `<strong class="text-neonBlue">${orderId.toUpperCase()}</strong>: Stage 3/4 — High-Density DTG & Quality Inspection in progress.`;
+        }
+
+        /* REVIEWS INLINE FORM */
+        function toggleReviewForm() {
+            const drawer = document.getElementById('reviewFormDrawer');
+            if (drawer) drawer.classList.toggle('hidden');
+        }
+
+        function submitNewReview(e) {
+            e.preventDefault();
+            const author = document.getElementById('revAuthor').value.trim();
+            const text = document.getElementById('revText').value.trim();
+            if (!author || !text) return;
+
+            const container = document.getElementById('reviewsContainer');
+            if (container) {
+                const card = document.createElement('div');
+                card.className = "bg-cardBg border border-neonBlue/40 rounded-2xl p-6 shadow-neon-blue";
+                card.innerHTML = `
+                    <div class="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-300 text-xs italic mb-4">"${text}"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-neonBlue/20 text-neonBlue flex items-center justify-center font-bold text-sm">VIP</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">${author}</h4>
+                            <span class="text-[10px] text-gray-400">Verified Client Review</span>
+                        </div>
+                    </div>
+                `;
+                container.prepend(card);
+                document.getElementById('revAuthor').value = '';
+                document.getElementById('revText').value = '';
+                toggleReviewForm();
+                showToast('Thank you! Your client review has been published.');
+            }
+        }
+
+        /* FLOATING AI CHATBOT ENGINE ("Arise AI") */
+        function toggleChatbot() {
+            const chatWin = document.getElementById('chatWindow');
+            chatWin.classList.toggle('hidden');
+            chatWin.classList.toggle('flex');
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const messagesContainer = document.getElementById('chatMessages');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            const userMsg = document.createElement('div');
+            userMsg.className = "bg-brandRed/20 border border-brandRed/40 p-3 rounded-2xl text-white max-w-[85%] ml-auto text-right";
+            userMsg.innerText = text;
+            messagesContainer.appendChild(userMsg);
+
+            input.value = "";
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = "bg-darkBg p-3 rounded-2xl border border-cardBorder text-gray-300 max-w-[85%]";
+                
+                const lower = text.toLowerCase();
+                let reply = "Thanks for asking! At THE ARISE, we offer custom DTG, Screen Printing, Embroidery, and Sublimation for T-Shirts, Denim, Linen, and Silk. Visit Bulk Booking for live quotes!";
+
+                if (lower.includes('denim') || lower.includes('jean')) {
+                    reply = "Our raw & washed Jeans/Denim fabrics are 12-14 oz twill cotton. They work best with computerized embroidery and laser etching!";
+                } else if (lower.includes('cotton') || lower.includes('tee')) {
+                    reply = "Our T-Shirts use 100% Combed Organic Cotton ranging from 180 to 280 GSM—ideal for ultra-smooth Direct-To-Garment (DTG) graphics.";
+                } else if (lower.includes('linen') || lower.includes('silk')) {
+                    reply = "Organic Flax Linen and Mulberry Silk are available for resort button-downs and luxury designer runs with minimalist embroidery or precision screen print.";
+                } else if (lower.includes('price') || lower.includes('cost') || lower.includes('discount')) {
+                    reply = "Base T-Shirts start at $18.00/unit. Orders of 50+ units receive 10% off, and 100+ units receive 15% off automatically!";
+                } else if (lower.includes('designer') || lower.includes('who built')) {
+                    reply = "This platform was designed and built by Alex Rivera, Elena Rostova, & Marcus Chen!";
+                }
+
+                botMsg.innerHTML = reply;
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 500);
+        }
+    </script>
+</body>
+</html>
